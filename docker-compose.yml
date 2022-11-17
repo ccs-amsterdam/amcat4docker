@@ -3,7 +3,7 @@ services:
   web_client:
     image: ccsamsterdam/amcat4client:0.0.1
     build: ./amcat4client
-    container_name: amcat4cient
+    container_name: amcat4client
     # restart: unless-stopped
     networks:
       - amcat-net
