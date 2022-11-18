@@ -42,6 +42,12 @@ docker exec -it amcat4 amcat4 create-test-index
 
 After this, you can log into the amcat database using the client at <http://localhost/> or explore the [R](https://github.com/ccs-amsterdam/amcat4r) or [Python](https://github.com/ccs-amsterdam/amcat4apiclient) packages to make API calls.
 
+# Upload to docker hub
+
+``` bash
+docker image push --all-tags ccsamsterdam/amcat4 && docker image push --all-tags ccsamsterdam/amcat4client
+```
+
 # For development
 
 Tear down the images and rebuild :bomb::

@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS BUILD_IMAGE
 
 # install dependencies
 RUN apt update && \
@@ -6,28 +6,31 @@ RUN apt update && \
     apt install -y \
     git \
     npm \
-    nodejs \
-    nginx
+    nodejs
 
-WORKDIR /srv
-
-# install amcat4client (the web client)
+# build amcat4client (the web client)
 RUN git clone https://github.com/ccs-amsterdam/amcat4client /srv/amcat4client && \
-    cd amcat4client && \
+    cd /srv/amcat4client && \
     npm install && \
     npx browserslist@latest --update-db && \
     npm run build
 
+# stage 2 (for smaller image size)
+FROM ubuntu:22.04
+
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y \
+    nginx
+
+# clean up
+RUN rm -rf /var/lib/apt/lists/*
+
+# copy client from build image
+COPY --from=BUILD_IMAGE /srv/amcat4client/build/ /srv/amcat4client/build/
 COPY amcat.conf /etc/nginx/sites-available/amcat.conf
 
 RUN ln -s /etc/nginx/sites-available/amcat.conf /etc/nginx/sites-enabled/amcat.conf 
-
-# clean up
-RUN apt remove -y \
-    git \
-    npm \
-    nodejs && \
-    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5000
 
