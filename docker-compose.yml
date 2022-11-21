@@ -36,8 +36,8 @@ services:
     # your database should have a folder on the host machine to permanently store data
     # run: `mkdir -p ~/.elasticsearch/database && sudo chown -R 1000:1000 ~/.elasticsearch/database`
     # to make it accessible for docker. Then uncomment the lines below (feel free to use different directory)
-    volumes: 
-      - ~/.elasticsearch/database:/usr/share/elasticsearch/data
+    # volumes: 
+    #   - ~/.elasticsearch/database:/usr/share/elasticsearch/data
 
 networks:
   amcat-net:
