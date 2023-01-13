@@ -31,7 +31,8 @@ docker-compose up --build -d
 Before being able to do anything useful through the API, you will need at least one user which can be created with the command below (note, the second `amcat4` is not a typo, but the command, while the first one is the name of the container):
 
 ``` bash
-docker exec -it amcat4 amcat4 create-admin --username admin --password supergeheim
+docker exec -it amcat4 amcat4 add-admin admin@something.org
+docker exec -it amcat4 amcat4 create-env -a admin@something.org -p supergeheim
 ```
 
 Of course, this new instance is still completely empty, so there is little to see. If you want to add some test data, you can use the create-test-data command, which will upload some State of the Union speeches:
@@ -53,7 +54,7 @@ docker image push --all-tags ccsamsterdam/amcat4 && docker image push --all-tags
 Tear down the images and rebuild :bomb::
 
 ``` bash
-docker stop $(docker ps -f name=amcat -f name=elastic -q) && docker system prune && docker-compose up --build -d
+docker stop $(docker ps -f name=cat -f name=elastic -q) && docker system prune && docker-compose up --build -d
 ```
 
 [^1]: Comment out the line “volumes:” and the succeeding line to not
