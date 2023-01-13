@@ -41,8 +41,6 @@ services:
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
     networks:
       - amcat-net
-    ports:
-      - 9200:9200
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
