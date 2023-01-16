@@ -16,6 +16,14 @@ wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose
 docker-compose up --pull="missing" -d
 ```
 
+This pulls the most recent stable images.
+If you want to pull the most recent nightly build the images instead (which are potentially unstable), use:
+
+```
+wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-nightlies.yml
+docker-compose -f docker-compose-nightlies.yml up --pull="missing" -d
+```
+
 ## Build Yourself
 
 1. Clone the repository and navigate to folder:

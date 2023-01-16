@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+  web_server:
+    image: ccsamsterdam/ngincat:nightlies
+    build: ./ngincat
+    container_name: ngincat
+    #restart: unless-stopped
+    networks:
+      - amcat-net
+    ports:
+      - 80:80 # [local port]:[container port]
+    depends_on:
+      - "web_client"
+      - "api"
+  web_client:
+    image: ccsamsterdam/nextcat:nightlies
+    build: ./nextcat
+    container_name: nextcat
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    depends_on:
+      - "api"
+  api:
+    image: ccsamsterdam/amcat4:nightlies
+    build: ./amcat4
+    container_name: amcat4
+    restart: unless-stopped
+    networks:
+      - amcat-net
+    depends_on:
+      - "db"
+    environment:
+      - amcat4_elastic_host=elastic7:9200
+      - amcat4_host=http://localhost/amcat
+    command: ["./wait-for-it.sh", "elastic7:9200", "--", "amcat4", "run"]
+  db:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    container_name: elastic7
+    restart: unless-stopped
+    # for security reasons, the database is only exposed to the other containers in the amcat-net network
+    networks:
+      - amcat-net
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+    # your database should have a folder on the host machine to permanently store data
+    # run: `mkdir -p ~/.elasticsearch/database && sudo chown -R 1000:1000 ~/.elasticsearch/database`
+    # to make it accessible for docker. Then uncomment the lines below (feel free to use different directory)
+    # volumes: 
+    #   - ~/.elasticsearch/database:/usr/share/elasticsearch/data # [local path]:[container path]
+
+networks:
+  amcat-net:
