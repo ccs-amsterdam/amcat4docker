@@ -3,30 +3,37 @@
 
 ![flow](amcat-flow-docker.drawio.svg)
 
-To run `Elasticsearch`, `amcat4` and the `amcat4client` from docker, download this repository and build the docker images individually or via `docker-compose`.
-For more information, see the [amcat manual](https://amcat-book.netlify.app/).
+To run `Elasticsearch`, `amcat4` and `nextcat` (the amcat web interface) from docker, download the [docker-compose.yml file](https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose.yml) or clone the repository to build the images yourself.
+For more information about AmCAT, see the [amcat manual](https://amcat-book.netlify.app/).
 
-# Setup
+# Usage
+## From dockerhub
 
-Clone the repository:
+Download the prebuild images from our [dockerhub repository](https://hub.docker.com/u/ccsamsterdam) and start the containers:
+
+``` bash
+wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose.yml
+docker-compose up --pull="missing" -d
+```
+
+## Build Yourself
+
+1. Clone the repository and navigate to folder:
 
 ``` bash
 git clone https://github.com/JBGruber/amcat4docker.git
+cd amcat4docker
 ```
 
-Set up a folder to permanently store your data in (the path `~/.elasticsearch/database` is just an example here):[^1]
+2. Build without caching to pull the newest version of all packages from GitHub:
 
 ``` bash
-mkdir -p ~/.elasticsearch/database && sudo chown -R 1000:1000 ~/.elasticsearch/database
+docker-compose down && \
+  docker-compose build --no-cache && \
+  docker-compose up -d
 ```
 
-Build and run the three containers:
-
-``` bash
-docker-compose up --build -d
-```
-
-# Usage
+# Configure
 
 Before being able to do anything useful through the API, you will need at least one user which can be created with the command below (note, the second `amcat4` is not a typo, but the command, while the first one is the name of the container):
 
@@ -41,21 +48,35 @@ Of course, this new instance is still completely empty, so there is little to se
 docker exec -it amcat4 amcat4 create-test-index
 ```
 
-After this, you can log into the amcat database using the client at <http://localhost/> or explore the [R](https://github.com/ccs-amsterdam/amcat4r) or [Python](https://github.com/ccs-amsterdam/amcat4apiclient) packages to make API calls.
+After this, you can log into the amcat database using the client at <http://localhost/> [^1] or explore the [R](https://github.com/ccs-amsterdam/amcat4r) or [Python](https://github.com/ccs-amsterdam/amcat4apiclient) packages to make API calls.
 
-# Upload to docker hub
+In the default setup, the storage of AmCAT is destroyed when the container is removed.
+To set up a folder to permanently store your data in, first create a folder with suitable access rights (the path `~/.elasticsearch/database` is just an example here):[^1]
+
+``` bash
+mkdir -p ~/.elasticsearch/database && sudo chown -R 1000:1000 ~/.elasticsearch/database
+```
+
+Then uncomment the lines last lines in the elastic7 container in your docker-compose.yml file:
+
+```
+    volumes: 
+      - ~/.elasticsearch/database:/usr/share/elasticsearch/data  # [local path]:[container path]
+```
+
+Build and run the three containers:
+
+``` bash
+docker-compose up --pull="missing" -d
+# OR
+docker-compose up --build -d
+```
+
+# Upload to dockerhub (for Contributors)
 
 ``` bash
 docker image push --all-tags ccsamsterdam/amcat4 && docker image push --all-tags ccsamsterdam/amcat4client
 ```
 
-# For development
 
-Tear down the images and rebuild :bomb::
-
-``` bash
-docker stop $(docker ps -f name=cat -f name=elastic -q) && docker system prune && docker-compose up --build -d
-```
-
-[^1]: Comment out the line “volumes:” and the succeeding line to not
-    store any data on your host.
+[^1]: You can't log in with the password, but need to use middlecat authentication with the web interface.
