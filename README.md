@@ -16,12 +16,14 @@ wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose
 docker-compose up --pull="missing" -d
 ```
 
-This pulls the most recent stable images.
-If you want to pull the most recent nightly build the images instead (which are potentially unstable), use:
+This pulls the most recent stable images (if it's not already on your machine).
+If you want to pull and run the most recent nightly builds of the images instead (which are potentially unstable), use:
+<-- It would be easier to use `docker-compose -f docker-compose-nightlies.yml up --pull="always" -d`, but this does not pull the newest nightlies for some reason -->
 
-```
+``` bash
 wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-nightlies.yml
-docker-compose -f docker-compose-nightlies.yml up --pull="missing" -d
+docker-compose -f docker-compose-nightlies.yml pull && \
+  docker-compose -f docker-compose-nightlies.yml up -d
 ```
 
 ## Build Yourself
