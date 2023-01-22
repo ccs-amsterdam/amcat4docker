@@ -45,12 +45,7 @@ docker-compose down && \
 
 # Configure
 
-Before being able to do anything useful through the API, you will need at least one user which can be created with the command below (note, the second `amcat4` is not a typo, but the command, while the first one is the name of the container):
-
-``` bash
-docker exec -it amcat4 amcat4 add-admin admin@something.org
-docker exec -it amcat4 amcat4 create-env -a admin@something.org -p supergeheim
-```
+The default setting of amcat is to not require any authentication, so you can immediately access it at <http://localhost>.
 
 Of course, this new instance is still completely empty, so there is little to see. If you want to add some test data, you can use the create-test-data command, which will upload some State of the Union speeches:
 
@@ -58,10 +53,18 @@ Of course, this new instance is still completely empty, so there is little to se
 docker exec -it amcat4 amcat4 create-test-index
 ```
 
-After this, you can log into the amcat database using the client at <http://localhost/> [^1] or explore the [R](https://github.com/ccs-amsterdam/amcat4r) or [Python](https://github.com/ccs-amsterdam/amcat4apiclient) packages to make API calls.
+If you want to change the configuration, for example to require authentication, you can run the interactive configuration:
+(note that you need to restart the amcat4 container to load the new settings)
 
-In the default setup, the storage of AmCAT is destroyed when the container is removed.
-To set up a folder to permanently store your data in, first create a folder with suitable access rights (the path `~/.elasticsearch/database` is just an example here):[^1]
+```bash
+docker exec -it amcat4 amcat4 create-test-index
+docker restart amcat4
+```
+
+# Data Location
+
+In the default setup, the storage of AmCAT is contained within the docker container and destroyed when the container is removed.
+To set up a folder to permanently store your data in, first create a folder with suitable access rights (the path `~/.elasticsearch/database` is just an example here):
 
 ``` bash
 mkdir -p ~/.elasticsearch/database && sudo chown -R 1000:1000 ~/.elasticsearch/database
@@ -74,14 +77,6 @@ Then uncomment the lines last lines in the elastic7 container in your docker-com
       - ~/.elasticsearch/database:/usr/share/elasticsearch/data  # [local path]:[container path]
 ```
 
-Build and run the three containers:
-
-``` bash
-docker-compose up --pull="missing" -d
-# OR
-docker-compose up --build -d
-```
-
 # Upload to dockerhub (for Contributors)
 
 ``` bash
@@ -89,4 +84,3 @@ docker image push --all-tags ccsamsterdam/amcat4 && docker image push --all-tags
 ```
 
 
-[^1]: You can't log in with the password, but need to use middlecat authentication with the web interface.
