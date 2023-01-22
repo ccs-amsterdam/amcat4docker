@@ -57,7 +57,7 @@ If you want to change the configuration, for example to require authentication, 
 (note that you need to restart the amcat4 container to load the new settings)
 
 ```bash
-docker exec -it amcat4 amcat4 create-test-index
+docker exec -it amcat4 amcat4 config
 docker restart amcat4
 ```
 
