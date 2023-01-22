@@ -13,9 +13,9 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/nextcat:0.0.2
-    build: ./nextcat
-    container_name: nextcat
+    image: ccsamsterdam/amcat4client:0.0.2
+    build: ./amcat4client
+    container_name: amcat4client
     restart: unless-stopped
     networks:
       - amcat-net
