@@ -29,13 +29,13 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ccsamsterdam/ngincat:nightlies
-      - name: Build and push nextcat
+      - name: Build and push amcat4client
         uses: docker/build-push-action@v3
         with:
-          context: ./nextcat
+          context: ./amcat4client
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ccsamsterdam/nextcat:nightlies
+          tags: ccsamsterdam/amcat4client:nightlies
       - name: Build and push amcat4
         uses: docker/build-push-action@v3
         with:
