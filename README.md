@@ -18,7 +18,7 @@ docker-compose up --pull="missing" -d
 
 This pulls the most recent stable images (if it's not already on your machine).
 If you want to pull and run the most recent nightly builds of the images instead (which are potentially unstable), use:
-<-- It would be easier to use `docker-compose -f docker-compose-nightlies.yml up --pull="always" -d`, but this does not pull the newest nightlies for some reason -->
+<!--  It would be easier to use `docker-compose -f docker-compose-nightlies.yml up --pull="always" -d`, but this does not pull the newest nightlies for some reason -->
 
 ``` bash
 wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-nightlies.yml
@@ -82,5 +82,3 @@ Then uncomment the lines last lines in the elastic7 container in your docker-com
 ``` bash
 docker image push --all-tags ccsamsterdam/amcat4 && docker image push --all-tags ccsamsterdam/amcat4client
 ```
-
-

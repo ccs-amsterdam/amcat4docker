@@ -4,7 +4,7 @@ services:
     image: ccsamsterdam/ngincat:nightlies
     build: ./ngincat
     container_name: ngincat
-    #restart: unless-stopped
+    restart: unless-stopped
     networks:
       - amcat-net
     ports:
@@ -13,9 +13,9 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/nextcat:nightlies
-    build: ./nextcat
-    container_name: nextcat
+    image: ccsamsterdam/amcat4client:nightlies
+    build: ./amcat4client
+    container_name: amcat4client
     restart: unless-stopped
     networks:
       - amcat-net
@@ -45,6 +45,7 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - xpack.security.enabled=false
     # your database should have a folder on the host machine to permanently store data
     # run: `mkdir -p ~/.elasticsearch/database && sudo chown -R 1000:1000 ~/.elasticsearch/database`
     # to make it accessible for docker. Then uncomment the lines below (feel free to use different directory)

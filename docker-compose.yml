@@ -4,7 +4,7 @@ services:
     image: ccsamsterdam/ngincat:0.0.2
     build: ./ngincat
     container_name: ngincat
-    #restart: unless-stopped
+    restart: unless-stopped
     networks:
       - amcat-net
     ports:
