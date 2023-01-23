@@ -33,6 +33,7 @@ services:
     environment:
       - amcat4_elastic_host=elastic7:9200
       - amcat4_host=http://localhost/amcat
+      - amcat4_auth=no_auth
     command: ["./wait-for-it.sh", "elastic7:9200", "--", "amcat4", "run"]
   db:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7

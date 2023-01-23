@@ -3,7 +3,7 @@
 
 ![flow](amcat-flow-docker.drawio.svg)
 
-To run `Elasticsearch`, `amcat4` and `nextcat` (the amcat web interface) from docker, download the [docker-compose.yml file](https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose.yml) or clone the repository to build the images yourself.
+To run `Elasticsearch`, `amcat4` and `amcat4client` (the amcat web interface) from docker, download the [docker-compose.yml file](https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose.yml) or clone the repository to build the images yourself.
 For more information about AmCAT, see the [amcat manual](https://amcat-book.netlify.app/).
 
 # Usage
@@ -80,5 +80,7 @@ Then uncomment the lines last lines in the elastic7 container in your docker-com
 # Upload to dockerhub (for Contributors)
 
 ``` bash
-docker image push --all-tags ccsamsterdam/amcat4 && docker image push --all-tags ccsamsterdam/amcat4client
+docker image push --all-tags ccsamsterdam/amcat4 && \
+  docker image push --all-tags ccsamsterdam/amcat4client && 
+  docker image push --all-tags ccsamsterdam/ngincat
 ```
