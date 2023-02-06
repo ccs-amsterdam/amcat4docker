@@ -36,7 +36,7 @@ services:
       - amcat4_auth=no_auth
     command: ["./wait-for-it.sh", "elastic7:9200", "--", "amcat4", "run"]
   db:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
     container_name: elastic7
     restart: unless-stopped
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
