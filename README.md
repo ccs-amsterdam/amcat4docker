@@ -53,8 +53,8 @@ Of course, this new instance is still completely empty, so there is little to se
 docker exec -it amcat4 amcat4 create-test-index
 ```
 
-If you want to change the configuration, for example to require authentication, you can run the interactive configuration:
-(note that you need to restart the amcat4 container to load the new settings)
+If you want to change the configuration, for example to require authentication, you can run the interactive configuration
+(note that you usually need to restart the amcat4 container to load the new settings):
 
 ```bash
 docker exec -it amcat4 amcat4 config

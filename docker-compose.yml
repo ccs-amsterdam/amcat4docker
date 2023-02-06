@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   web_server:
-    image: ccsamsterdam/ngincat:0.0.3
+    image: ccsamsterdam/ngincat:4.0.3
     build: ./ngincat
     container_name: ngincat
     restart: unless-stopped
@@ -13,7 +13,7 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:0.0.3
+    image: ccsamsterdam/amcat4client:4.0.3
     build: ./amcat4client
     container_name: amcat4client
     restart: unless-stopped
@@ -22,7 +22,7 @@ services:
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:0.0.3
+    image: ccsamsterdam/amcat4:4.0.3
     build: ./amcat4
     container_name: amcat4
     restart: unless-stopped
@@ -35,12 +35,12 @@ services:
       - amcat4_host=http://localhost/amcat
     command: ["./wait-for-it.sh", "elastic7:9200", "--", "amcat4", "run"]
   db:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
     container_name: elastic7
     restart: unless-stopped
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
     # If you want to be able to access it locally, uncomment the following two lines
-    #ports:
+    # ports:
     # - 9200:9200
     networks:
       - amcat-net
