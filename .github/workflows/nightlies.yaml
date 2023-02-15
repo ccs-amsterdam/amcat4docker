@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - "main"
+      - "investigate_gha"
 
 jobs:
   docker:
