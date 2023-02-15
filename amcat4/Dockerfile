@@ -13,9 +13,6 @@ RUN git clone https://github.com/ccs-amsterdam/amcat4 /srv/amcat && \
 
 WORKDIR /srv/amcat
 
-COPY amcat.sh /usr/bin/amcat4
-RUN chmod +x /usr/bin/amcat4
-
 EXPOSE 5000
 
 CMD ["amcat4", "run"]

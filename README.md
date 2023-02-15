@@ -77,6 +77,15 @@ Then uncomment the lines last lines in the elastic7 container in your docker-com
       - ~/.elasticsearch/database:/usr/share/elasticsearch/data  # [local path]:[container path]
 ```
 
+# A quick test
+
+See if documents can be queried from the test index:
+
+```
+docker exec -it amcat4 amcat4 create-test-index
+curl -s http://localhost/amcat/index/state_of_the_union/documents | head -c 150
+```
+
 # Upload to dockerhub (for Contributors)
 
 ``` bash
