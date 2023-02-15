@@ -8,7 +8,7 @@ ENV amcat4_commit ""
 RUN git clone https://github.com/ccs-amsterdam/amcat4 /srv/amcat
 RUN cd /srv/amcat
 # pin to commit in built
-RUN git checkout ${amcat4_commit}
+# RUN git checkout ${amcat4_commit}
 RUN pip install .
 
 WORKDIR /srv/amcat
