@@ -1,7 +1,8 @@
 FROM python:3.10.9-alpine3.17
 
+# install dependecies
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
-    git libffi-dev
+    git gcc libc-dev libffi-dev
 
 # install amcat4 (the server)
 ENV amcat4_commit ""
