@@ -1,6 +1,6 @@
 FROM python:3.10.9-alpine3.17
 
-RUN apk add git cargo py3-pip
+RUN apk add git cargo libffi-dev
 
 # install amcat4 (the server)
 ENV amcat4_commit ""
