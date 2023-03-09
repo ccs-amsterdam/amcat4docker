@@ -22,8 +22,12 @@ If you want to pull and run the most recent nightly builds of the images instead
 
 ``` bash
 wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-nightlies.yml
-docker-compose -f docker-compose-nightlies.yml pull && \
-  docker-compose -f docker-compose-nightlies.yml up -d
+docker-compose -f docker-compose-nightlies.yml up --pull="missing" -d
+```
+
+``` bash
+wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-nightlies.yml
+docker-compose -f docker-compose-https.yml up --pull="missing" -d
 ```
 
 ## Build Yourself
