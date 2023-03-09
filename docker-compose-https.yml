@@ -7,7 +7,7 @@ services:
       - cert-volume:/var/www/certbot/:rw
   web_server:
     image: ccsamsterdam/ngincat_https:4.0.6
-    build: ./ngincat
+    build: ./ngincat_https
     container_name: ngincat_https
     restart: unless-stopped
     networks:
