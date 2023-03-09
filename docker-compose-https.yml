@@ -5,21 +5,22 @@ services:
     container_name: certcat
     volumes:
       - cert-volume:/var/www/certbot/:rw
+      - nginx-volume:/etc/nginx/conf.d/:rw
   web_server:
-    image: ccsamsterdam/ngincat_https:4.0.6
-    build: ./ngincat_https
-    container_name: ngincat_https
+    image: ccsamsterdam/ngincat:4.0.6
+    build: ./ngincat
+    container_name: ngincat
     restart: unless-stopped
     networks:
       - amcat-net
     environment:
       - amcat4_client=http://amcat4client:3000
       - amcat4_host=http://amcat4:5000
-      - amcat4_server_name=www.opted.amcat.nl
     ports:
       - 80:80 # [local port]:[container port]
     volumes:
       - cert-volume:/var/www/certbot/:ro
+      - nginx-volume:/etc/nginx/conf.d/:rw
     depends_on:
       - "web_client"
       - "api"
@@ -74,3 +75,4 @@ networks:
 
 volumes:
      cert-volume: 
+     nginx-volume:
