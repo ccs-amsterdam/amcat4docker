@@ -1,13 +1,7 @@
 version: "3.8"
 services:
-  certbot:
-    image: certbot/certbot
-    container_name: certcat
-    volumes:
-      - cert-volume:/var/www/certbot/:rw
-      - nginx-volume:/etc/nginx/conf.d:rw
   web_server:
-    image: ccsamsterdam/ngincat:4.0.6
+    image: ccsamsterdam/ngincat:4.0.7
     build: ./ngincat
     container_name: ngincat
     restart: unless-stopped
@@ -18,9 +12,6 @@ services:
       - amcat4_host=http://amcat4:5000
     ports:
       - 80:80 # [local port]:[container port]
-    volumes:
-      - cert-volume:/var/www/certbot/:ro
-      - nginx-volume:/etc/nginx/conf.d:rw
     depends_on:
       - "web_client"
       - "api"
@@ -72,7 +63,3 @@ services:
 
 networks:
   amcat-net:
-
-volumes:
-     cert-volume: 
-     nginx-volume:
