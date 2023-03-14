@@ -5,7 +5,7 @@ services:
     container_name: certcat
     volumes:
       - cert-volume:/var/www/certbot/:rw
-      - nginx-volume:/etc/nginx/conf.d/:rw
+      - nginx-volume:/etc/nginx/conf.d:rw
   web_server:
     image: ccsamsterdam/ngincat:4.0.6
     build: ./ngincat
@@ -20,7 +20,7 @@ services:
       - 80:80 # [local port]:[container port]
     volumes:
       - cert-volume:/var/www/certbot/:ro
-      - nginx-volume:/etc/nginx/conf.d/:rw
+      - nginx-volume:/etc/nginx/conf.d:rw
     depends_on:
       - "web_client"
       - "api"
