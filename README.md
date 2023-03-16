@@ -30,7 +30,6 @@ We have a separate compose file for that purpose:
 
 ``` bash
 wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-https.yml
-
 ```
 
 You need to edit the docker-compose-https.yml file and replace example.com in the amcat4_server_name variable before you spin up the containers.
@@ -42,10 +41,13 @@ docker-compose -f docker-compose-https.yml up --pull="missing" -d
 To obtain the certificates for your website, you can then run:
 
 ``` bash
-docker-compose -f docker-compose-https.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d example.com
+docker exec -it ngincat certbot --nginx -d example.com -d www.example.com
 ```
 
 (Obviously, you should replace the actual name of your website in the compose file and the end of this command.)
+This will only work if your domain is already accesible via the web, otherwise the code challange will fail.
+Note that in the https version of the compose file, the nginx configuration is saved in a persistent docker volumne and is not overwritten by restarting or even recreating the container.
+To reset your changes to the template, you need to remove the volumne with `docker volume rm amcat4docker_nginx-volume` to return to the default configuration.
 
 ## Build Yourself
 
@@ -118,6 +120,5 @@ curl -s http://localhost/amcat/index/state_of_the_union/documents | head -c 150
 ``` bash
 docker image push --all-tags ccsamsterdam/amcat4 && \
   docker image push --all-tags ccsamsterdam/amcat4client && 
-  docker image push --all-tags ccsamsterdam/ngincat &&
-  docker image push --all-tags ccsamsterdam/ngincat_https
+  docker image push --all-tags ccsamsterdam/ngincat
 ```

@@ -30,8 +30,9 @@ auto_envsubst() {
     # create a subdirectory where the template file exists
     mkdir -p "$output_dir/$subdir"
     entrypoint_log "$ME: Running envsubst on $template to $output_path"
-    set -o noclobber
-    envsubst "$defined_envs" < "$template" > "$output_path"
+    if [ ! -f "$output_path" ]; then
+      envsubst "$defined_envs" < "$template" > "$output_path"
+    fi
   done
 }
 
