@@ -10,8 +10,12 @@ services:
     environment:
       - amcat4_client=http://amcat4client:3000
       - amcat4_host=http://amcat4:5000
+      - amcat4_server_name=example.com
     ports:
       - 80:80 # [local port]:[container port]
+    volumes:
+      - nginx-volume:/etc/nginx/conf.d/:rw
+      - cert-volume:/etc/letsencrypt/:rw
     depends_on:
       - "web_client"
       - "api"
@@ -63,3 +67,7 @@ services:
 
 networks:
   amcat-net:
+
+volumes:
+     cert-volume: 
+     nginx-volume:

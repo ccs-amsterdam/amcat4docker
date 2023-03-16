@@ -25,10 +25,27 @@ wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose
 docker-compose -f docker-compose-nightlies.yml up --pull="missing" -d
 ```
 
+If you plan to make your amcat instance available via the internet, you should use secure https connections.
+We have a separate compose file for that purpose:
+
 ``` bash
-wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-nightlies.yml
-docker-compose -f docker-compose-https.yml up --pull="missing" -d
+wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-https.yml
+
 ```
+
+You need to edit the docker-compose-https.yml file and replace example.com in the amcat4_server_name variable before you spin up the containers.
+
+``` bash
+docker-compose -f docker-compose-https.yml up --pull="missing" -d
+``` 
+
+To obtain the certificates for your website, you can then run:
+
+``` bash
+docker-compose -f docker-compose-https.yml run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d example.com
+```
+
+(Obviously, you should replace the actual name of your website in the compose file and the end of this command.)
 
 ## Build Yourself
 
@@ -45,6 +62,12 @@ cd amcat4docker
 docker-compose down && \
   docker-compose build --no-cache && \
   docker-compose up -d
+```
+
+``` bash
+docker-compose -f docker-compose-https.yml down && \
+  docker-compose -f docker-compose-https.yml  build --no-cache && \
+  docker-compose -f docker-compose-https.yml  up -d
 ```
 
 # Configure
@@ -95,5 +118,6 @@ curl -s http://localhost/amcat/index/state_of_the_union/documents | head -c 150
 ``` bash
 docker image push --all-tags ccsamsterdam/amcat4 && \
   docker image push --all-tags ccsamsterdam/amcat4client && 
-  docker image push --all-tags ccsamsterdam/ngincat
+  docker image push --all-tags ccsamsterdam/ngincat &&
+  docker image push --all-tags ccsamsterdam/ngincat_https
 ```
