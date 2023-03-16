@@ -22,9 +22,32 @@ If you want to pull and run the most recent nightly builds of the images instead
 
 ``` bash
 wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-nightlies.yml
-docker-compose -f docker-compose-nightlies.yml pull && \
-  docker-compose -f docker-compose-nightlies.yml up -d
+docker-compose -f docker-compose-nightlies.yml up --pull="missing" -d
 ```
+
+If you plan to make your amcat instance available via the internet, you should use secure https connections.
+We have a separate compose file for that purpose:
+
+``` bash
+wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-https.yml
+```
+
+You need to edit the docker-compose-https.yml file and replace example.com in the amcat4_server_name variable before you spin up the containers.
+
+``` bash
+docker-compose -f docker-compose-https.yml up --pull="missing" -d
+``` 
+
+To obtain the certificates for your website, you can then run:
+
+``` bash
+docker exec -it ngincat certbot --nginx -d example.com -d www.example.com
+```
+
+(Obviously, you should replace the actual name of your website in the compose file and the end of this command.)
+This will only work if your domain is already accesible via the web, otherwise the code challange will fail.
+Note that in the https version of the compose file, the nginx configuration is saved in a persistent docker volumne and is not overwritten by restarting or even recreating the container.
+To reset your changes to the template, you need to remove the volumne with `docker volume rm amcat4docker_nginx-volume` to return to the default configuration.
 
 ## Build Yourself
 
@@ -41,6 +64,12 @@ cd amcat4docker
 docker-compose down && \
   docker-compose build --no-cache && \
   docker-compose up -d
+```
+
+``` bash
+docker-compose -f docker-compose-https.yml down && \
+  docker-compose -f docker-compose-https.yml  build --no-cache && \
+  docker-compose -f docker-compose-https.yml  up -d
 ```
 
 # Configure
