@@ -11,7 +11,7 @@ WORKDIR /srv/amcat
 
 RUN git clone https://github.com/ccs-amsterdam/amcat4 /srv/amcat && \
     cd /srv/amcat && \
-    # pin to commit in built
+    # pin to commit or branch in built
     git checkout ${amcat4_commit} && \
     pip install . && \
     rm -r .git
