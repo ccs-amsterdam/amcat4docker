@@ -66,10 +66,12 @@ docker-compose down && \
   docker-compose up -d
 ```
 
+You can do the same for one of the other Compose files, e.g., `docker-compose-https.yml`:
+
 ``` bash
 docker-compose -f docker-compose-https.yml down && \
-  docker-compose -f docker-compose-https.yml  build --no-cache && \
-  docker-compose -f docker-compose-https.yml  up -d
+  docker-compose -f docker-compose-https.yml build --no-cache && \
+  docker-compose -f docker-compose-https.yml up -d
 ```
 
 # Configure

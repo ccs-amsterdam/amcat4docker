@@ -9,10 +9,12 @@ ENV amcat4_commit ""
 
 WORKDIR /srv/amcat
 
+ARG amcat4_commit=master
+
 RUN git clone https://github.com/ccs-amsterdam/amcat4 /srv/amcat && \
     cd /srv/amcat && \
     # pin to commit or branch in built
-    git checkout ${amcat4_commit} && \
+    git checkout $amcat4_commit && \
     pip install . && \
     rm -r .git
 
