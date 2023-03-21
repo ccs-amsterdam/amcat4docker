@@ -4,7 +4,7 @@ RUN apk add git
 
 WORKDIR /srv/amcat4client
 
-ARG amcat4_commit=main
+ARG amcat4client_commit=master
 
 # build amcat4client (the web client)
 RUN git clone https://github.com/ccs-amsterdam/amcat4client /srv/amcat4client && \
