@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   web_server:
-    image: ccsamsterdam/ngincat:4.0.7
+    image: ccsamsterdam/ngincat:4.0.12
     build: ./ngincat
     container_name: ngincat
     restart: unless-stopped
@@ -21,7 +21,7 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:4.0.7
+    image: ccsamsterdam/amcat4client:4.0.12
     build: ./amcat4client
     container_name: amcat4client
     restart: unless-stopped
@@ -33,7 +33,7 @@ services:
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:4.0.7
+    image: ccsamsterdam/amcat4:4.0.12
     build: ./amcat4
     container_name: amcat4
     restart: unless-stopped
