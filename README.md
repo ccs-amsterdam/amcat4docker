@@ -92,22 +92,6 @@ docker exec -it amcat4 amcat4 config
 docker restart amcat4
 ```
 
-# Data Location
-
-In the default setup, the storage of AmCAT is contained within the docker container and destroyed when the container is removed.
-To set up a folder to permanently store your data in, first create a folder with suitable access rights (the path `~/.elasticsearch/database` is just an example here):
-
-``` bash
-mkdir -p ~/.elasticsearch/database && sudo chown -R 1000:1000 ~/.elasticsearch/database
-```
-
-Then uncomment the lines last lines in the elastic7 container in your docker-compose.yml file:
-
-```
-    volumes: 
-      - ~/.elasticsearch/database:/usr/share/elasticsearch/data  # [local path]:[container path]
-```
-
 # A quick test
 
 See if documents can be queried from the test index:
