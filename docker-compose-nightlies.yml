@@ -53,6 +53,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
+      # limits memory usage of elasticsearch; 4g or less can cause errors when uploading larger document collections
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.security.enabled=false
     # your database should have a folder on the host machine to permanently store data. By default
