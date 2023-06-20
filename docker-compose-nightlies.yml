@@ -41,7 +41,7 @@ services:
     depends_on:
       - "db"
   db:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
     container_name: elastic7
     restart: unless-stopped
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
@@ -57,7 +57,7 @@ services:
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.security.enabled=false
     # your database should have a folder on the host machine to permanently store data. By default
-    # a docker volume is used, which leaves management of the files to Docker 
+    # a docker volume (called elastic-volume) is used, which leaves management of the files to Docker 
     # (see https://docs.docker.com/storage/volumes/). You can also store files somewhere else with
     # (for example):
     #
