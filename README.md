@@ -3,7 +3,7 @@
 
 ![flow](amcat-flow-docker.drawio.svg)
 
-To run `Elasticsearch`, `amcat4` and `amcat4client` (the amcat web interface) from docker, download the [docker-compose.yml file](https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose.yml) or clone the repository to build the images yourself.
+To run `Elasticsearch`, `amcat4` and `amcat4client` (the amcat web interface) from docker, download the [docker-compose.yml file](https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose.yml) or clone the repository to build the images yourself.
 For more information about AmCAT, see the [amcat manual](https://amcat-book.netlify.app/).
 
 # Usage
@@ -12,7 +12,7 @@ For more information about AmCAT, see the [amcat manual](https://amcat-book.netl
 Download the prebuild images from our [dockerhub repository](https://hub.docker.com/u/ccsamsterdam) and start the containers:
 
 ``` bash
-wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose.yml
+wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose.yml
 docker-compose up --pull="missing" -d
 ```
 
@@ -21,7 +21,7 @@ If you want to pull and run the most recent nightly builds of the images instead
 <!--  It would be easier to use `docker-compose -f docker-compose-nightlies.yml up --pull="always" -d`, but this does not pull the newest nightlies for some reason -->
 
 ``` bash
-wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-nightlies.yml
+wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose-nightlies.yml
 docker-compose -f docker-compose-nightlies.yml up --pull="missing" -d
 ```
 
@@ -29,7 +29,7 @@ If you plan to make your amcat instance available via the internet, you should u
 We have a separate compose file for that purpose:
 
 ``` bash
-wget https://raw.githubusercontent.com/JBGruber/amcat4docker/main/docker-compose-https.yml
+wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose-https.yml
 ```
 
 You need to edit the docker-compose-https.yml file and replace example.com in the amcat4_server_name variable before you spin up the containers.
@@ -54,7 +54,7 @@ To reset your changes to the template, you need to remove the volumne with `dock
 1. Clone the repository and navigate to folder:
 
 ``` bash
-git clone https://github.com/JBGruber/amcat4docker.git
+git clone https://github.com/ccs-amsterdam/amcat4docker.git
 cd amcat4docker
 ```
 
