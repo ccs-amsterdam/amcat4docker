@@ -36,13 +36,13 @@ services:
       - amcat-net
     environment:
       # note that these take precedence over values set in `amcat4 config``
-      - amcat4_elastic_host=http://elastic7:9200
+      - amcat4_elastic_host=http://elastic8:9200
       - amcat4_host=http://localhost/amcat
     depends_on:
       - "db"
   db:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
-    container_name: elastic7
+    container_name: elastic8
     restart: unless-stopped
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
     # If you want to be able to access it locally, uncomment the following two lines
