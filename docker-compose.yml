@@ -37,6 +37,7 @@ services:
       # note that these take precedence over values set in `amcat4 config``
       - amcat4_elastic_host=http://elastic8:9200
       - amcat4_host=http://localhost/amcat
+      - FORWARDED_ALLOW_IPS=*
     depends_on:
       - "db"
   db:
