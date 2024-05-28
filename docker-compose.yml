@@ -45,8 +45,8 @@ services:
     restart: unless-stopped
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
     # If you want to be able to access it locally, uncomment the following two lines
-    ports:
-     - 9200:9200
+    # ports:
+    #  - 9200:9200
     networks:
       - amcat-net
     environment:

@@ -11,13 +11,12 @@ RUN git clone https://github.com/ccs-amsterdam/amcat4client /srv/amcat4client &&
     cd /srv/amcat4client && \
     # pin to commit or branch in built
     git checkout $amcat4client_commit && \
-    npm install --production && \
-    npx browserslist@latest --update-db
+    npm i && \
+    npx browserslist@latest --update-db && \
+    cp dotenv.local.example .env.local
 
 EXPOSE 3000
 
-COPY docker-entrypoint.sh .
-ENTRYPOINT ["./docker-entrypoint.sh"]
 
 # Run npm start script when container starts
 CMD ["npm", "run", "dev"]
