@@ -23,7 +23,7 @@ services:
       - amcat-net
     environment:
       # this can be changed later, it is just the suggested default
-      - amcat4_host=http://localhost/amcat
+      - NEXT_PUBLIC_AMCAT_SERVER=http://localhost/amcat
     depends_on:
       - "api"
   api:
