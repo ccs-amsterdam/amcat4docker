@@ -12,8 +12,7 @@ RUN git clone https://github.com/ccs-amsterdam/amcat4client /srv/amcat4client &&
     # pin to commit or branch in built
     git checkout $amcat4client_commit && \
     npm i && \
-    npx browserslist@latest --update-db && \
-    cp dotenv.local.example .env.local
+    npx browserslist@latest --update-db
 
 EXPOSE 3000
 
