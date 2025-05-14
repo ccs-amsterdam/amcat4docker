@@ -7,8 +7,8 @@ services:
     networks:
       - amcat-net
     environment:
-      - amcat4_client=http://amcat4client:3000
-      - amcat4_host=http://amcat4:5000
+      - amcat4_client=${AMCAT_CLIENT:-http://amcat4client:3000}
+      - amcat4_host=${AMCAT_HOST_INTERNAL:-http://amcat4:5000}
     ports:
       - 80:80 # [local port]:[container port]
     depends_on:
@@ -16,7 +16,7 @@ services:
       - "api"
   web_client:
     image: ccsamsterdam/amcat4client:testing
-    build: 
+    build:
       context: ./amcat4client
       args:
         amcat4client_commit: redesign
@@ -30,7 +30,7 @@ services:
       - "api"
   api:
     image: ccsamsterdam/amcat4:testing
-    build:  
+    build:
       context: ./amcat4
       args:
         amcat4_commit: redesign
@@ -39,9 +39,10 @@ services:
     networks:
       - amcat-net
     environment:
-      # note that these take precedence over values set in `amcat4 config``
-      - amcat4_elastic_host=http://elastic8:9200
-      - amcat4_host=http://localhost/amcat    
+     # note that these take precedence over values set in `amcat4 config``
+      - amcat4_elastic_host=${ELASTIC_HOST:-http://elastic8:9200}
+      - amcat4_host=${AMCAT_HOST_EXTERNAL:-http://localhost/amcat}
+      - FORWARDED_ALLOW_IPS=*
     depends_on:
       - "db"
   db:
@@ -61,13 +62,13 @@ services:
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.security.enabled=false
     # your database should have a folder on the host machine to permanently store data. By default
-    # a docker volume (called elastic-volume) is used, which leaves management of the files to Docker 
+    # a docker volume (called elastic-volume) is used, which leaves management of the files to Docker
     # (see https://docs.docker.com/storage/volumes/). You can also store files somewhere else with
     # (for example):
     #
     # volumes:
     #   - /path/to/elastic-data:/usr/share/elasticsearch/data # [local path]:[container path]
-    # 
+    #
     # In this case, you need to make sure that the folder `/path/to/elastic-data` exists and Docker
     # has read and write access to it.
     volumes:

@@ -7,8 +7,8 @@ services:
     networks:
       - amcat-net
     environment:
-      - amcat4_client=http://amcat4client:3000
-      - amcat4_host=http://amcat4:5000
+      - amcat4_client=${AMCAT_CLIENT:-http://amcat4client:3000}
+      - amcat4_host=${AMCAT_HOST_INTERNAL:-http://amcat4:5000}
     ports:
       - 80:80 # [local port]:[container port]
     depends_on:
@@ -22,7 +22,7 @@ services:
     networks:
       - amcat-net
     environment:
-      - AMCAT_SERVER=http://localhost/amcat
+      - AMCAT_SERVER=${AMCAT_HOST_EXTERNAL:-http://localhost/amcat}
     depends_on:
       - "api"
   api:
@@ -34,8 +34,8 @@ services:
       - amcat-net
     environment:
       # note that these take precedence over values set in `amcat4 config``
-      - amcat4_elastic_host=http://elastic8:9200
-      - amcat4_host=http://localhost/amcat
+      - amcat4_elastic_host=${ELASTIC_HOST:-http://elastic8:9200}
+      - amcat4_host=${AMCAT_HOST_EXTERNAL:-http://localhost/amcat}
       - FORWARDED_ALLOW_IPS=*
     depends_on:
       - "db"
@@ -46,23 +46,23 @@ services:
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
     # If you want to be able to access it locally, uncomment the following two lines
     # ports:
-    #  - 9200:9200
+    # - 9200:9200
     networks:
       - amcat-net
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       # limits memory usage of elasticsearch; 4g or less can cause errors when uploading larger document collections
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g" 
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.security.enabled=false
     # your database should have a folder on the host machine to permanently store data. By default
-    # a docker volume (called elastic-volume) is used, which leaves management of the files to Docker 
+    # a docker volume (called elastic-volume) is used, which leaves management of the files to Docker
     # (see https://docs.docker.com/storage/volumes/). You can also store files somewhere else with
     # (for example):
     #
     # volumes:
     #   - /path/to/elastic-data:/usr/share/elasticsearch/data # [local path]:[container path]
-    # 
+    #
     # In this case, you need to make sure that the folder `/path/to/elastic-data` exists and Docker
     # has read and write access to it.
     volumes:
