@@ -1,3 +1,5 @@
+# this compose file can be used to test specific feature commits or branches
+# replace 'main' with a commit or branch
 services:
   web_server:
     image: ccsamsterdam/ngincat:testing
@@ -19,7 +21,8 @@ services:
     build:
       context: ./amcat4client
       args:
-        amcat4client_commit: redesign
+        # use this to control with commit or branch to build
+        amcat4client_commit: main
     container_name: amcat4client
     restart: unless-stopped
     networks:
@@ -33,13 +36,14 @@ services:
     build:
       context: ./amcat4
       args:
-        amcat4_commit: redesign
+        # use this to control with commit or branch to build
+        amcat4_commit: main
     container_name: amcat4
     restart: unless-stopped
     networks:
       - amcat-net
     environment:
-     # note that these take precedence over values set in `amcat4 config``
+      # note that these take precedence over values set in `amcat4 config``
       - amcat4_elastic_host=${ELASTIC_HOST:-http://elastic8:9200}
       - amcat4_host=${AMCAT_HOST_EXTERNAL:-http://localhost/amcat}
       - FORWARDED_ALLOW_IPS=*
