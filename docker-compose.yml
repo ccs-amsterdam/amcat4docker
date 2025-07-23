@@ -40,7 +40,7 @@ services:
     depends_on:
       - "db"
   db:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.18.4
     container_name: elastic8
     restart: unless-stopped
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
