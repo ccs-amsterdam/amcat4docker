@@ -1,6 +1,6 @@
 services:
   web_server:
-    image: ccsamsterdam/ngincat:4.0.16
+    image: ccsamsterdam/ngincat:4.1.0
     build: ./ngincat
     container_name: ngincat
     restart: unless-stopped
@@ -15,18 +15,19 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:4.0.16
+    image: ccsamsterdam/amcat4client:4.1.0
     build: ./amcat4client
     container_name: amcat4client
     restart: unless-stopped
     networks:
       - amcat-net
     environment:
-      - AMCAT_SERVER=${AMCAT_HOST_EXTERNAL:-http://localhost/amcat}
+      - NEXT_PUBLIC_AMCAT_SERVER=${NEXT_PUBLIC_AMCAT_SERVER:-http://localhost/amcat}
+      - COOKIE_SECRET=${COOKIE_SECRET:-be sure to change this or provide COOKIE_SECRET in production!}
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:4.0.16
+    image: ccsamsterdam/amcat4:4.1.0
     build: ./amcat4
     container_name: amcat4
     restart: unless-stopped
@@ -72,4 +73,4 @@ networks:
   amcat-net:
 
 volumes:
-     elastic-volume:
+  elastic-volume:

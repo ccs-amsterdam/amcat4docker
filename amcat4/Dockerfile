@@ -1,8 +1,8 @@
-FROM python:3.10.9-alpine3.17
+FROM python:3.11-alpine3.19
 
 # install dependecies
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
-    git gcc libc-dev libffi-dev
+    git gcc libc-dev libffi-dev libmagic
 
 # install amcat4 (the server)
 ENV amcat4_commit ""
