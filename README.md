@@ -10,14 +10,19 @@ For more information about AmCAT, see the [amcat manual](https://amcat-book.netl
 # Usage
 ## From dockerhub
 
-Download the prebuild images from our [dockerhub repository](https://hub.docker.com/u/ccsamsterdam) and start the containers:
+In short, you need to download the prebuild images from our [dockerhub repository](https://hub.docker.com/u/ccsamsterdam) and start the containers. In specific, we offer three docker-compose options: (1) [stable](#stable), (2) [most recent, but unstable](most-recent-but-unstable), and (3) [stable instance available via the internet](stable-instance-available-via-the-internet).
+
+### Stable
+
+The following docker-compose pulls the most recent stable images (if it's not already on your machine):
 
 ``` bash
 wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose.yml
 docker-compose up --pull="missing" -d
 ```
 
-This pulls the most recent stable images (if it's not already on your machine).
+### Most recent, but unstable
+
 If you want to pull and run the most recent nightly builds of the images instead (which are potentially unstable), use:
 <!--  It would be easier to use `docker-compose -f docker-compose-nightlies.yml up --pull="always" -d`, but this does not pull the newest nightlies for some reason -->
 
@@ -26,8 +31,9 @@ wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-co
 docker-compose -f docker-compose-nightlies.yml up --pull="missing" -d
 ```
 
-If you plan to make your amcat instance available via the internet, you should use secure https connections.
-We have a separate compose file for that purpose:
+### Stable instance available via the internet
+
+If you plan to make your amcat instance available via the internet, you should use secure https connections. The following compose file has NGINX integrated:
 
 ``` bash
 wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose-https.yml
