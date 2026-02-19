@@ -2,3 +2,4 @@
 amcat4docker.Rproj
 .Rhistory
 docker-compose-test.yml
+.env
