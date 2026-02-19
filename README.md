@@ -22,7 +22,7 @@ cd amcat4docker
 ```{sh}
 docker compose up -d
 ```
-Note: You might need to use `sudo` and/or `docker-compose` depending on your settings. 
+Note: You might need to use `sudo docker` and/or `docker-compose` instead of `docker compose` depending on your installation. 
 
 In the default configuration, the web interface should now be available at [http://localhost](http://localhost). On a server, you can test with:
 
