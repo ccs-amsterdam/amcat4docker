@@ -6,18 +6,18 @@ It is setup to allow both local development/testing use as well as production se
 
 ## Usage
 
-Step 0: Install docker and docker-compose
+**Step 0:** Install docker and docker-compose
 
 See the [official docker documentation](https://docs.docker.com/compose/install/) and/or their [specific instructions for linux](https://docs.docker.com/compose/install/linux/). 
 
-Step 1: Clone the repository
+**Step 1:** Clone the repository
 
 ```{sh}
 git clone https://github.com/ccs-amsterdam/amcat4docker
 cd amcat4docker
 ```
 
-Step 2: Launch the docker
+**Step 2:** Launch the docker
 
 ```{sh}
 docker compose up -d
