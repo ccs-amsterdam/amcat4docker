@@ -1,64 +1,87 @@
 
-# amcat4docker
+# Docker compose file and docker containers for AmCAT4
 
-![flow](amcat-flow-docker.drawio.svg)
+This repository contains a `docker-compose.yml` file for running AmCAT4. 
+It is setup to allow both local development/testing use as well as production setup.
 
-To run `Elasticsearch`, `amcat4` and `amcat4client` (the amcat web interface) from docker, download the [docker-compose.yml file](https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose.yml) or clone the repository to build the images yourself.
-For more information about AmCAT, see the [amcat manual](https://amcat-book.netlify.app/).
+## Usage
 
-# Usage
-## From dockerhub
+Step 0: Install docker and docker-compose
 
-Download the prebuild images from our [dockerhub repository](https://hub.docker.com/u/ccsamsterdam) and start the containers:
+See the [official docker documentation](https://docs.docker.com/compose/install/) and/or their [specific instructions for linux](https://docs.docker.com/compose/install/linux/). 
 
-``` bash
-wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose.yml
-docker-compose up --pull="missing" -d
-```
+Step 1: Clone the repository
 
-This pulls the most recent stable images (if it's not already on your machine).
-If you want to pull and run the most recent nightly builds of the images instead (which are potentially unstable), use:
-<!--  It would be easier to use `docker-compose -f docker-compose-nightlies.yml up --pull="always" -d`, but this does not pull the newest nightlies for some reason -->
-
-``` bash
-wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose-nightlies.yml
-docker-compose -f docker-compose-nightlies.yml up --pull="missing" -d
-```
-
-If you plan to make your amcat instance available via the internet, you should use secure https connections.
-We have a separate compose file for that purpose:
-
-``` bash
-wget https://raw.githubusercontent.com/ccs-amsterdam/amcat4docker/main/docker-compose-https.yml
-```
-
-You need to edit the docker-compose-https.yml file and replace example.com in the amcat4_server_name variable before you spin up the containers.
-
-``` bash
-docker-compose -f docker-compose-https.yml up --pull="missing" -d
-``` 
-
-To obtain the certificates for your website, you can then run:
-
-``` bash
-docker exec -it ngincat certbot --nginx -d example.com -d www.example.com
-```
-
-(Obviously, you should replace the actual name of your website in the compose file and the end of this command.)
-This will only work if your domain is already accesible via the web, otherwise the code challange will fail.
-Note that in the https version of the compose file, the nginx configuration is saved in a persistent docker volumne and is not overwritten by restarting or even recreating the container.
-To reset your changes to the template, you need to remove the volumne with `docker volume rm amcat4docker_nginx-volume` to return to the default configuration.
-
-## Build Yourself
-
-1. Clone the repository and navigate to folder:
-
-``` bash
-git clone https://github.com/ccs-amsterdam/amcat4docker.git
+```{sh}
+git clone https://github.com/ccs-amsterdam/amcat4docker
 cd amcat4docker
 ```
 
-2. Build without caching to pull the newest version of all packages from GitHub:
+Step 2: Launch the docker
+
+```{sh}
+docker compose up -d
+```
+Note: You might need to use `sudo` and/or `docker-compose` depending on your settings. 
+
+In the default configuration, the web interface should now be available at [http://localhost](http://localhost). On a server, you can test with:
+
+```{sh}
+curl localhost/amcat
+```
+
+Note that it might take about a minute to boot everything up, so if you don't see anything wait a second and refresh. 
+
+## Configuring AmCAT
+
+The configuration of AmCAT4 is controlled through a `.env` file, for which [an example](.env.example) is given in this repository.
+
+Especially for production use (i.e. on a server accessible to your lab or the world), be sure to edit at least the hostname, cookie secret, authentication, and data storage.
+
+To edit the configuration, copy `.env.example` to `.env` and edit it:
+
+```{sh}
+cp .env.example .env
+nano .env
+```
+
+After editing, either restart individual containers or just run 
+
+```{sh}
+docker compose down
+docker compose up -d
+```
+
+## Troubleshooting
+
+If it doesn't work, check whether all containers are running with 
+
+```{sh}
+docker ps
+```
+
+To see the logs for a specific container, e.g. amcat4, run:
+
+```{sh}
+docker logs -f amcat4
+```
+
+# Container overview
+
+AmCAT consists of four main services:
+
+![flow](amcat-flow-docker.drawio.svg)
+
+- amcat4client is the main web UI, based on [ccs-amsterdam/amcat4client](https://github.com/ccs-amsterdam/amcat4client)
+- amcat4 is the backend/API, based on [ccs-amsterdam/amcat4](https://github.com/ccs-amsterdam/amcat4) 
+- an elasticsearch database is used to store and index the documents
+- a 'caddy' web server exposes the client and api so they can be reached on localhost (default) or using an external domain name. 
+  
+For more information about AmCAT, see the [amcat manual](https://amcat-book.netlify.app/).
+
+# Building your own images
+
+To build the images without caching to pull the newest version of all packages from GitHub:
 
 ``` bash
 docker-compose down && \
@@ -66,42 +89,9 @@ docker-compose down && \
   docker-compose up -d
 ```
 
-You can do the same for one of the other Compose files, e.g., `docker-compose-https.yml`:
-
-``` bash
-docker-compose -f docker-compose-https.yml down && \
-  docker-compose -f docker-compose-https.yml build --no-cache && \
-  docker-compose -f docker-compose-https.yml up -d
-```
-
-# Configure
-
-The default setting of amcat is to not require any authentication, so you can immediately access it at <http://localhost>.
-
-Of course, this new instance is still completely empty, so there is little to see. If you want to add some test data, you can use the create-test-data command, which will upload some State of the Union speeches:
-
-``` bash
-docker exec -it amcat4 amcat4 create-test-index
-```
-
-If you want to change the configuration, for example to require authentication, you can run the interactive configuration
-(note that you usually need to restart the amcat4 container to load the new settings):
-
-```bash
-docker exec -it amcat4 amcat4 config
-docker restart amcat4
-```
-
-# A quick test
-
-See if documents can be queried from the test index:
-
-```
-docker exec -it amcat4 amcat4 create-test-index
-curl -s http://localhost/amcat/index/state_of_the_union/documents | head -c 150
-```
-
 # Upload to dockerhub (for Contributors)
+
+If you've made changes to amcat4 or amcat4client and wish to update the images on docker hub, run `docker login` and then:
 
 ``` bash
 docker image push --all-tags ccsamsterdam/amcat4 && \
