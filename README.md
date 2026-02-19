@@ -1,14 +1,14 @@
 
 # Docker compose file and docker containers for AmCAT4
 
-This repository contains a `docker-compose.yml` file for running AmCAT4. 
+This repository contains a `docker-compose.yml` file for running AmCAT4.
 It is setup to allow both local development/testing use as well as production setup.
 
 ## Usage
 
 **Step 0:** Install docker and docker-compose
 
-See the [official docker documentation](https://docs.docker.com/compose/install/) and/or their [specific instructions for linux](https://docs.docker.com/compose/install/linux/). 
+See the [official docker documentation](https://docs.docker.com/compose/install/) and/or their [specific instructions for linux](https://docs.docker.com/compose/install/linux/).
 
 **Step 1:** Clone the repository
 
@@ -22,7 +22,7 @@ cd amcat4docker
 ```{sh}
 docker compose up -d
 ```
-Note: You might need to use `sudo docker` and/or `docker-compose` instead of `docker compose` depending on your installation. 
+Note: You might need to use `sudo docker` and/or `docker-compose` instead of `docker compose` depending on your installation.
 
 In the default configuration, the web interface should now be available at [http://localhost](http://localhost). On a server, you can test with:
 
@@ -30,7 +30,7 @@ In the default configuration, the web interface should now be available at [http
 curl localhost/amcat
 ```
 
-Note that it might take about a minute to boot everything up, so if you don't see anything wait a second and refresh. 
+Note that it might take about a minute to boot everything up, so if you don't see anything wait a second and refresh.
 
 ## Configuring AmCAT
 
@@ -45,7 +45,7 @@ cp .env.example .env
 nano .env
 ```
 
-After editing, either restart individual containers or just run 
+After editing, either restart individual containers or just run
 
 ```{sh}
 docker compose down
@@ -54,7 +54,7 @@ docker compose up -d
 
 ## Troubleshooting
 
-If it doesn't work, check whether all containers are running with 
+If it doesn't work, check whether all containers are running with
 
 ```{sh}
 docker ps
@@ -73,10 +73,10 @@ AmCAT consists of four main services:
 ![flow](amcat-flow-docker.drawio.svg)
 
 - amcat4client is the main web UI, based on [ccs-amsterdam/amcat4client](https://github.com/ccs-amsterdam/amcat4client)
-- amcat4 is the backend/API, based on [ccs-amsterdam/amcat4](https://github.com/ccs-amsterdam/amcat4) 
+- amcat4 is the backend/API, based on [ccs-amsterdam/amcat4](https://github.com/ccs-amsterdam/amcat4)
 - an elasticsearch database is used to store and index the documents
-- a 'caddy' web server exposes the client and api so they can be reached on localhost (default) or using an external domain name. 
-  
+- a 'caddy' web server exposes the client and api so they can be reached on localhost (default) or using an external domain name.
+
 For more information about AmCAT, see the [amcat manual](https://amcat-book.netlify.app/).
 
 # Building your own images
@@ -95,6 +95,6 @@ If you've made changes to amcat4 or amcat4client and wish to update the images o
 
 ``` bash
 docker image push --all-tags ccsamsterdam/amcat4 && \
-  docker image push --all-tags ccsamsterdam/amcat4client && 
+  docker image push --all-tags ccsamsterdam/amcat4client &&
   docker image push --all-tags ccsamsterdam/ngincat
 ```
