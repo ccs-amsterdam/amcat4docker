@@ -1,16 +1,21 @@
 services:
   web_server:
-    image: ccsamsterdam/ngincat:4.1.0
-    build: ./ngincat
-    container_name: ngincat
+    image: caddy:2-alpine
+    container_name: katty
     restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - SITE_ADDRESS=${SITE_ADDRESS:-http://localhost}
+      - AMCAT_API=api:5000
+      - AMCAT_UI=web_client:3000
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     networks:
       - amcat-net
-    environment:
-      - amcat4_client=${AMCAT_CLIENT:-http://amcat4client:3000}
-      - amcat4_host=${AMCAT_HOST_INTERNAL:-http://amcat4:5000}
-    ports:
-      - 80:80 # [local port]:[container port]
     depends_on:
       - "web_client"
       - "api"
@@ -74,3 +79,5 @@ networks:
 
 volumes:
   elastic-volume:
+  caddy_data:
+  caddy_config:
