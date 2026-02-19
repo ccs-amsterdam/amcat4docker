@@ -27,7 +27,7 @@ services:
     networks:
       - amcat-net
     environment:
-      - NEXT_PUBLIC_AMCAT_SERVER=${NEXT_PUBLIC_AMCAT_SERVER:-http://localhost/amcat}
+      - NEXT_PUBLIC_AMCAT_SERVER=${NEXT_PUBLIC_AMCAT_SERVER:-${SITE_ADDRESS}/amcat}
       - COOKIE_SECRET=${COOKIE_SECRET:-be sure to change this or provide COOKIE_SECRET in production!}
     depends_on:
       - "api"
@@ -41,7 +41,7 @@ services:
     environment:
       # note that these take precedence over values set in `amcat4 config``
       - amcat4_elastic_host=${ELASTIC_HOST:-http://elastic8:9200}
-      - amcat4_host=${AMCAT_HOST_EXTERNAL:-http://localhost/amcat}
+      - amcat4_host=${AMCAT_HOST_EXTERNAL:-${SITE_ADDRESS}/amcat}
       - FORWARDED_ALLOW_IPS=*
     depends_on:
       - "db"
@@ -59,7 +59,7 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       # limits memory usage of elasticsearch; 4g or less can cause errors when uploading larger document collections
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+      - ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY} -Xmx${ELASTIC_MEMORY}
       - xpack.security.enabled=false
     # your database should have a folder on the host machine to permanently store data. By default
     # a docker volume (called elastic-volume) is used, which leaves management of the files to Docker
