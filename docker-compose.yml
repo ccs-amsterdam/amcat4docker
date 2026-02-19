@@ -1,3 +1,13 @@
+# Docker-compose file for AmCAT4, consisting of 4 services:
+# - web_server: a Caddy server that serves the web client and proxies API requests to the API container
+# - web_client: the AmCAT4 web client
+# - api: the AmCAT4 API server
+# - db: an Elasticsearch database for AmCAT4
+#
+# For most use cases, you should not need to edit this file
+# Instead, set environment variables in a .env file
+# You can copy dotenv_example to .env and edit the values there
+
 services:
   web_server:
     image: caddy:2-alpine
@@ -20,7 +30,7 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:4.1.0
+    image: ccsamsterdam/amcat4client:${AMCAT_VERSION:-4.1.0}
     build: ./amcat4client
     container_name: amcat4client
     restart: unless-stopped
@@ -32,7 +42,7 @@ services:
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:4.1.0
+    image: ccsamsterdam/amcat4:${AMCAT_VERSION:-4.1.0}
     build: ./amcat4
     container_name: amcat4
     restart: unless-stopped
@@ -50,29 +60,19 @@ services:
     container_name: elastic8
     restart: unless-stopped
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
-    # If you want to be able to access it locally, uncomment the following two lines
-    # ports:
-    # - 9200:9200
+    # to make it available, set ELASTIC_PUBLISHED_PORT to 9200: in the .env file
+    ports:
+      - "${ELASTIC_PUBLISHED_PORT:-}9200"
     networks:
       - amcat-net
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      # limits memory usage of elasticsearch; 4g or less can cause errors when uploading larger document collections
-      - ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY} -Xmx${ELASTIC_MEMORY}
       - xpack.security.enabled=false
-    # your database should have a folder on the host machine to permanently store data. By default
-    # a docker volume (called elastic-volume) is used, which leaves management of the files to Docker
-    # (see https://docs.docker.com/storage/volumes/). You can also store files somewhere else with
-    # (for example):
-    #
-    # volumes:
-    #   - /path/to/elastic-data:/usr/share/elasticsearch/data # [local path]:[container path]
-    #
-    # In this case, you need to make sure that the folder `/path/to/elastic-data` exists and Docker
-    # has read and write access to it.
+      # Set heap memory in .env to at most half available memory, and at most 32g
+      - ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY:-1g} -Xmx${ELASTIC_MEMORY:-1g}
     volumes:
-      - elastic-volume:/usr/share/elasticsearch/data:rw
+      - ${ELASTIC_DATA_STORAGE:-elastic-volume}:/usr/share/elasticsearch/data:rw
 
 networks:
   amcat-net:

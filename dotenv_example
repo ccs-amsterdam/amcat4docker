@@ -1,20 +1,40 @@
+# This file is an example .env file for configuring AmCAT4 installed via the docker
+# Copy this file to .env and edit the values below as needed
+
+# # General settings
+# Set to 'latest' to get the last available build
+AMCAT_VERSION=4.1.0
+
+# # Web server settings
 # What is the hostname for this machine?
 # Be sure to include https:// for servers that can be reached from outside
 # For local testing, using http://localhost
 SITE_ADDRESS=http://localhost
 
-### Elastic settings ###
-# ** Memory **
+# # Elastic settings
+
+# ## Data storage
+# By default, data is stored on an internal docker volume
+# For production, you should probably create a folder on the server,
+# making sure to have uid 1000 own the folder. For example:
+# sudo mkdir -p /var/lib/elastic-amcat4
+# sudo chown -R 1000:1000 /var/lib/elastic-amcat4
+# Next, fill in the folder on the next line and uncomment it:
+# ELASTIC_DATA_STORAGE=/var/lib/elastic-amcat4
+
+# ## Local accessibility
+# If you want elastic to be reachable directly from the server, uncomment the next line
+# ELASTIC_PUBLISHED_PORT=9200:
+
+# ## Memory
 # How much 'heap' memory can elastic use?
 # In general, set this to at most 32g, and to at most half your availabile RAM (whichever is lower)
-ELASTIC_MEMORY=512m
+ELASTIC_MEMORY=4g
 
-# ** Important note for elastic performance **
+# ## Important note for elastic performance
 # Elastic requires a relatively high vm.max_map_count setting to work properly
 # Especially on older servers, you might need to adjust this manually
 # To check, use `sysctl vm.max_map_count` - it should be 262144
 # If it's lower, run this command to change it:
 #   echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
 # Then, either restart or run `sudo sysctl -w vm.max_map_count=262144` to update it
-
-
