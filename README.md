@@ -10,7 +10,7 @@ For more information about AmCAT, see the [amcat manual](https://amcat-book.netl
 # Usage
 ## From dockerhub
 
-In short, you need to download the prebuild images from our [dockerhub repository](https://hub.docker.com/u/ccsamsterdam) and start the containers. In specific, we offer three docker-compose options: (1) [stable](#stable), (2) [most recent, but unstable](most-recent-but-unstable), and (3) [stable instance available via the internet](stable-instance-available-via-the-internet).
+In short, you need to download the prebuild images from our [dockerhub repository](https://hub.docker.com/u/ccsamsterdam) and start the containers. In specific, we offer three docker-compose options: (1) [stable](#stable), (2) [most recent, but unstable](#most-recent-but-unstable), and (3) [stable instance available via the internet](#stable-instance-available-via-the-internet).
 
 ### Stable
 
