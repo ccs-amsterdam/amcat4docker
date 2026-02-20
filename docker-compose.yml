@@ -38,6 +38,7 @@ services:
       - amcat-net
     environment:
       - AMCAT4_API=${AMCAT4_API:-http://localhost/api}
+      - AMCAT4_SERVER_API=http://api:5000
       - COOKIE_SECRET=${AMCAT4_COOKIE_SECRET:-be sure to change this or provide COOKIE_SECRET in production!}
     depends_on:
       - "api"
@@ -60,11 +61,21 @@ services:
       - amcat4_admin_email
       - FORWARDED_ALLOW_IPS=*
     depends_on:
-      - "db"
+      db:
+        condition: service_healthy
   db:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.18.4
     container_name: elastic8
     restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'curl -s http://localhost:9200/_cluster/health | grep -vq ''"status":"red"''',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
     # to make it available, set ELASTIC_PUBLISHED_PORT to 9200: in the .env file
     ports:
