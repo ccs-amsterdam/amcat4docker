@@ -18,8 +18,8 @@ services:
       - "443:443"
     environment:
       - AMCAT4_URL=${AMCAT4_URL:-http://localhost}
-      - AMCAT_API=api:5000
-      - AMCAT_UI=web_client:3000
+      - DOCKER_AMCAT_API=api:5000
+      - DOCKER_AMCAT_UI=web_client:3000
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
@@ -37,7 +37,7 @@ services:
     networks:
       - amcat-net
     environment:
-      - NEXT_PUBLIC_AMCAT_SERVER=${NEXT_PUBLIC_AMCAT_SERVER:-${AMCAT4_URL:-http://localhost}/amcat}
+      - AMCAT4_API=${AMCAT4_API:-http://localhost/api}
       - COOKIE_SECRET=${AMCAT4_COOKIE_SECRET:-be sure to change this or provide COOKIE_SECRET in production!}
     depends_on:
       - "api"
@@ -51,7 +51,7 @@ services:
     environment:
       # note that these take precedence over values set in `amcat4 config``
       - amcat4_elastic_host=${amcat4_elastic_host:-http://elastic8:9200}
-      - amcat4_host=${AMCAT4_URL:-http://localhost}/amcat
+      - amcat4_host=${AMCAT4_API:-http://localhost/api}
       - amcat4_elastic_password
       - amcat4_elastic_verify_ssl
       - amcat4_system_index

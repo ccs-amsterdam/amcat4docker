@@ -1,12 +1,12 @@
 {$AMCAT4_URL} {
     # Route API requests to the amcat4 container
-    handle_path /amcat* {
-        reverse_proxy {$AMCAT_API}
+    handle_path /api* {
+        reverse_proxy {$DOCKER_AMCAT_API}
     }
 
     # Route everything else to the frontend GUI
     handle {
-        reverse_proxy {$AMCAT_UI}
+        reverse_proxy {$DOCKER_AMCAT_UI}
     }
 
     # Optional: compression for better performance
