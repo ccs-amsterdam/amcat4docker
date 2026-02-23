@@ -17,9 +17,9 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - AMCAT4_URL=${AMCAT4_URL:-http://localhost}
-      - DOCKER_AMCAT_API=api:5000
-      - DOCKER_AMCAT_UI=web_client:3000
+      - AMCAT4_URL=${AMCAT4_URL:-http://localhost}   # Where should caddy serve the client and API?
+      - DOCKER_AMCAT_API=api:5000                    # Where can caddy find the API?
+      - DOCKER_AMCAT_UI=web_client:3000              # Where can caddy find the web client?
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
@@ -30,20 +30,20 @@ services:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:${AMCAT4_VERSION:-4.1.0}
+    image: ccsamsterdam/amcat4client:${AMCAT4_VERSION:-4.1.1}
     build: ./amcat4client
     container_name: amcat4client
     restart: unless-stopped
     networks:
       - amcat-net
     environment:
-      - AMCAT4_API=${AMCAT4_API:-http://localhost/api}
-      - AMCAT4_SERVER_API=http://api:5000
+      - AMCAT4_API=${AMCAT4_API:-http://localhost/api}           # Where should the web client send API requests?
+      - AMCAT4_SERVER_API=${AMCAT4_SERVER_API:-http://api:5000}  # Where can the nextjs server find the API, esp. within the docker network?
       - COOKIE_SECRET=${AMCAT4_COOKIE_SECRET:-be sure to change this or provide COOKIE_SECRET in production!}
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:${AMCAT4_VERSION:-4.1.0}
+    image: ccsamsterdam/amcat4:${AMCAT4_VERSION:-4.1.1}
     build: ./amcat4
     container_name: amcat4
     restart: unless-stopped
@@ -51,8 +51,9 @@ services:
       - amcat-net
     environment:
       # note that these take precedence over values set in `amcat4 config``
-      - amcat4_elastic_host=${amcat4_elastic_host:-http://elastic8:9200}
-      - amcat4_host=${AMCAT4_API:-http://localhost/api}
+      - amcat4_elastic_host=${amcat4_elastic_host:-http://elastic8:9200}   # Where can the API find the database
+      - amcat4_host=${AMCAT4_API:-http://localhost/api}                    # Location of the API, esp. for authentication
+      # Passthrough environment variables for the API configuration
       - amcat4_elastic_password
       - amcat4_elastic_verify_ssl
       - amcat4_system_index
