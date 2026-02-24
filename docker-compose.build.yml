@@ -1,0 +1,12 @@
+# This file contains additional compose instructions for building the images from the Dockerfiles
+# This is only needed for build new images locally during development
+# To activate, either use:
+#  docker-compose -f docker-compose.yml -f docker-compose.build.yml up --build
+# Or add the following to your .env file:
+# COMPOSE_FILE=docker-compose.yml:docker-compose.build.yml
+
+services:
+  web_client:
+    build: ./amcat4client
+  api:
+    build: ./amcat4

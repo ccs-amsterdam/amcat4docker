@@ -1,76 +1,103 @@
+# Docker-compose file for AmCAT4, consisting of 4 services:
+# - web_server: a Caddy server that serves the web client and proxies API requests to the API container
+# - web_client: the AmCAT4 web client
+# - api: the AmCAT4 API server
+# - db: an Elasticsearch database for AmCAT4
+#
+# For most use cases, you should not need to edit this file
+# Instead, set environment variables in a .env file
+# You can copy dotenv_example to .env and edit the values there
+
 services:
   web_server:
-    image: ccsamsterdam/ngincat:4.1.0
-    build: ./ngincat
-    container_name: ngincat
+    image: caddy:2-alpine
+    container_name: katty
     restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - AMCAT4_URL=${AMCAT4_URL:-http://localhost}   # Where should caddy serve the client and API?
+      - DOCKER_AMCAT_API=api:5000                    # Where can caddy find the API?
+      - DOCKER_AMCAT_UI=web_client:3000              # Where can caddy find the web client?
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     networks:
       - amcat-net
-    environment:
-      - amcat4_client=${AMCAT_CLIENT:-http://amcat4client:3000}
-      - amcat4_host=${AMCAT_HOST_INTERNAL:-http://amcat4:5000}
-    ports:
-      - 80:80 # [local port]:[container port]
     depends_on:
       - "web_client"
       - "api"
   web_client:
-    image: ccsamsterdam/amcat4client:4.1.0
-    build: ./amcat4client
+    image: ccsamsterdam/amcat4client:${AMCAT4_VERSION:-4.1.1}
     container_name: amcat4client
     restart: unless-stopped
     networks:
       - amcat-net
     environment:
-      - NEXT_PUBLIC_AMCAT_SERVER=${NEXT_PUBLIC_AMCAT_SERVER:-http://localhost/amcat}
-      - COOKIE_SECRET=${COOKIE_SECRET:-be sure to change this or provide COOKIE_SECRET in production!}
+      - AMCAT4_API=${AMCAT4_API:-http://localhost/api}           # Where should the web client send API requests?
+      - AMCAT4_SERVER_API=${AMCAT4_SERVER_API:-http://api:5000}  # Where can the nextjs server find the API, esp. within the docker network?
+      - COOKIE_SECRET=${AMCAT4_COOKIE_SECRET:-be sure to change this or provide COOKIE_SECRET in production!}
     depends_on:
       - "api"
   api:
-    image: ccsamsterdam/amcat4:4.1.0
-    build: ./amcat4
+    image: ccsamsterdam/amcat4:${AMCAT4_VERSION:-4.1.1}
     container_name: amcat4
     restart: unless-stopped
     networks:
       - amcat-net
     environment:
       # note that these take precedence over values set in `amcat4 config``
-      - amcat4_elastic_host=${ELASTIC_HOST:-http://elastic8:9200}
-      - amcat4_host=${AMCAT_HOST_EXTERNAL:-http://localhost/amcat}
+      - amcat4_elastic_host=${amcat4_elastic_host:-http://elastic8:9200}   # Where can the API find the database
+      - amcat4_host=${AMCAT4_API:-http://localhost/api}                    # Location of the API, esp. for authentication
+      # Passthrough environment variables for the API configuration
+      - amcat4_elastic_password
+      - amcat4_elastic_verify_ssl
+      - amcat4_system_index
+      - amcat4_auth
+      - amcat4_middlecat_url
+      - amcat4_admin_email
       - FORWARDED_ALLOW_IPS=*
     depends_on:
-      - "db"
+      db:
+        condition: service_healthy
   db:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.18.4
     container_name: elastic8
     restart: unless-stopped
+    ulimits:
+     memlock:
+       soft: -1
+       hard: -1
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'curl -s http://localhost:9200/_cluster/health | grep -vq ''"status":"red"''',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
     # for security reasons, the database is only exposed to the other containers in the amcat-net network
-    # If you want to be able to access it locally, uncomment the following two lines
-    # ports:
-    # - 9200:9200
+    # to make it available, set ELASTIC_PUBLISHED_PORT to 9200: in the .env file
+    ports:
+      - "${ELASTIC_PUBLISHED_PORT:-}9200"
     networks:
       - amcat-net
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      # limits memory usage of elasticsearch; 4g or less can cause errors when uploading larger document collections
-      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - xpack.security.enabled=false
-    # your database should have a folder on the host machine to permanently store data. By default
-    # a docker volume (called elastic-volume) is used, which leaves management of the files to Docker
-    # (see https://docs.docker.com/storage/volumes/). You can also store files somewhere else with
-    # (for example):
-    #
-    # volumes:
-    #   - /path/to/elastic-data:/usr/share/elasticsearch/data # [local path]:[container path]
-    #
-    # In this case, you need to make sure that the folder `/path/to/elastic-data` exists and Docker
-    # has read and write access to it.
+      # Set heap memory in .env to at most half available memory, and at most 32g
+      - ES_JAVA_OPTS=-Xms${ELASTIC_MEMORY:-1g} -Xmx${ELASTIC_MEMORY:-1g}
     volumes:
-      - elastic-volume:/usr/share/elasticsearch/data:rw
+      - ${ELASTIC_DATA_STORAGE:-elastic-volume}:/usr/share/elasticsearch/data:rw
 
 networks:
   amcat-net:
 
 volumes:
   elastic-volume:
+  caddy_data:
+  caddy_config:
