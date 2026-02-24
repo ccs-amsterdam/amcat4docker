@@ -52,9 +52,22 @@ docker compose down
 docker compose up -d
 ```
 
+## Updating
+
+If a new build is released, you can update the compose file and pull in the new docker images:
+
+```{sh}
+docker compose down
+git pull
+docker compose pull
+docker compose up -d
+```
+
+It might be good to check the .env.example file to see if any changes have been made that would affect your configuration.
+
 ## Troubleshooting
 
-If it doesn't work, check whether all containers are running with
+If something isn't work, check whether all containers are running with
 
 ```{sh}
 docker ps
@@ -81,13 +94,19 @@ For more information about AmCAT, see the [amcat manual](https://amcat-book.netl
 
 # Building your own images
 
-To build the images without caching to pull the newest version of all packages from GitHub:
+To build the images you need to include the [docker-compose.build.yml](docker-compose.build.yml), either on the command line:
 
 ``` bash
-docker-compose down && \
-  docker-compose build --no-cache && \
-  docker-compose up -d
+docker compose -f docker-compose.yml -f docker-compose.build.yml build --no-cache
 ```
+
+Or by adding the compose file to your .env file:
+
+```
+COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml
+```
+
+Note that the changes won't be reflected until you restart the images using `docker compose down && docker compose up -d`
 
 # Upload to dockerhub (for Contributors)
 
@@ -95,6 +114,5 @@ If you've made changes to amcat4 or amcat4client and wish to update the images o
 
 ``` bash
 docker image push --all-tags ccsamsterdam/amcat4 && \
-  docker image push --all-tags ccsamsterdam/amcat4client &&
-  docker image push --all-tags ccsamsterdam/ngincat
+  docker image push --all-tags ccsamsterdam/amcat4client
 ```
