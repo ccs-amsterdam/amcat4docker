@@ -1,3 +1,8 @@
+# Outdated!
+
+We moved the docker-compose file to the (now mono)repo [ccs-amsterdam/amcat4](https://github.com/ccs-amsterdam/amcat4). 
+Please see the instructions there to download the new docker-compose file, which will pull new images for the frontend and backend.
+
 
 # Docker compose file and docker containers for AmCAT4
 
